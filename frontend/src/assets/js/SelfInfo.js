@@ -111,31 +111,53 @@ export default {
         };
     },
     created() {
+        let user = JSON.parse(sessionStorage.getItem("access-user"));
+        if (!user) {
+            this.$router.push('/login');
+            return;
+        }
         this.load();
         this.find();
         this.init(this.avatar);
+        this.form.username = user.username;
+        this.form.name = user.name;
     },
     methods: {
         //获取个人信息页面信息
         load() {
-            this.form = JSON.parse(sessionStorage.getItem("user"));
-            this.identity = JSON.parse(sessionStorage.getItem("identity"));
-            this.username = this.form.username;
-            this.name = this.form.name;
-            this.gender = this.form.gender;
-            this.age = this.form.age;
-            this.phoneNum = this.form.phoneNum;
-            this.email = this.form.email;
-            this.avatar = this.form.avatar;
+            let user = JSON.parse(sessionStorage.getItem("access-user"));
+            if (!user) {
+                this.$router.push('/login');
+                return;
+            }
+            this.form = user;
+            this.identity = user.identity;
+            this.username = user.username;
+            this.name = user.name;
+            this.gender = user.gender;
+            this.age = user.age;
+            this.phoneNum = user.phoneNum;
+            this.email = user.email;
+            this.avatar = user.avatar;
         },
         //查询数据，更新session
         find() {
-            this.form = JSON.parse(sessionStorage.getItem("user"));
-            request.post("/" + this.identity + "/login", this.form).then((res) => {
-                //更新sessionStorage
-                window.sessionStorage.setItem("user", JSON.stringify(res.data));
-                //更新页面数据
-                this.load();
+            let user = JSON.parse(sessionStorage.getItem("access-user"));
+            if (!user) {
+                this.$router.push('/login');
+                return;
+            }
+            request.post("/" + user.identity + "/login", user).then((res) => {
+                if (res.code === "0") {
+                    //更新sessionStorage
+                    window.sessionStorage.setItem("access-user", JSON.stringify(res.data));
+                    //更新页面数据
+                    this.load();
+                } else {
+                    this.$router.push('/login');
+                }
+            }).catch(() => {
+                this.$router.push('/login');
             });
         },
         Edit() {

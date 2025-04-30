@@ -24,7 +24,6 @@ public class FileController {
 
     private static final String ip = "http://localhost";
     static String rootFilePath = System.getProperty("user.dir") + "/src/main/resources/files/";
-    static String originalFilename = "";
     private String port = "9090";
     @Resource
     private StudentService studentService;
@@ -41,22 +40,22 @@ public class FileController {
     @PostMapping("/upload")
     public Result<?> upload(MultipartFile file) throws IOException {
         //获取文件名
-        originalFilename = file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
         System.out.println(originalFilename);
         //获取文件尾缀
         String fileType = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
 
         //重命名
         String uid = new UID().produceUID();
-        originalFilename = uid + fileType;
-        System.out.println(originalFilename);
+        String newFilename = uid + fileType;
+        System.out.println(newFilename);
         //存储位置
-        String targetPath = rootFilePath + originalFilename;
+        String targetPath = rootFilePath + newFilename;
         System.out.println(targetPath);
         //获取字节流
         FileUtil.writeBytes(file.getBytes(), targetPath);
 
-        return Result.success("上传成功");
+        return Result.success(newFilename);
     }
 
     /**
@@ -64,43 +63,39 @@ public class FileController {
      */
     @PostMapping("/uploadAvatar/stu")
     public Result<?> uploadStuAvatar(@RequestBody Student student) {
-        if (originalFilename != null) {
-            student.setAvatar(originalFilename);
-            System.out.println(student);
+        if (student.getAvatar() != null) {
             int i = studentService.updateNewStudent(student);
             if (i == 1) {
-                return Result.success(originalFilename);
+                return Result.success(student.getAvatar());
             }
         } else {
-            return Result.error("-1", "rootFilePath为空");
+            return Result.error("-1", "头像文件名为空");
         }
         return Result.error("-1", "设置头像失败");
     }
 
     @PostMapping("/uploadAvatar/admin")
     public Result<?> uploadAdminAvatar(@RequestBody Admin admin) {
-        if (originalFilename != null) {
-            admin.setAvatar(originalFilename);
+        if (admin.getAvatar() != null) {
             int i = adminService.updateAdmin(admin);
             if (i == 1) {
-                return Result.success(originalFilename);
+                return Result.success(admin.getAvatar());
             }
         } else {
-            return Result.error("-1", "rootFilePath为空");
+            return Result.error("-1", "头像文件名为空");
         }
         return Result.error("-1", "设置头像失败");
     }
 
     @PostMapping("/uploadAvatar/dormManager")
     public Result<?> uploadDormManagerAvatar(@RequestBody DormManager dormManager) {
-        if (originalFilename != null) {
-            dormManager.setAvatar(originalFilename);
+        if (dormManager.getAvatar() != null) {
             int i = dormManagerService.updateNewDormManager(dormManager);
             if (i == 1) {
-                return Result.success(originalFilename);
+                return Result.success(dormManager.getAvatar());
             }
         } else {
-            return Result.error("-1", "rootFilePath为空");
+            return Result.error("-1", "头像文件名为空");
         }
         return Result.error("-1", "设置头像失败");
     }

@@ -80,8 +80,12 @@ export default {
             });
         },
         getSessionInfo() {
-            let user = JSON.parse(sessionStorage.getItem("user"));
-            this.author = user.name;
+            let user = JSON.parse(sessionStorage.getItem("access-user"));
+            if (user) {
+                this.author = user.name;
+            } else {
+                this.$router.push('/login');
+            }
         },
         showDetail(row) {
             this.detailDialog = true;

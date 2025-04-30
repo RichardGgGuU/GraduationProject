@@ -37,7 +37,7 @@ router.beforeEach((to, from, next) => {
     // next 是函数，表示放行
     // next() 放行
     // next('/*') 强制跳转
-    const user = window.sessionStorage.getItem('user')
+    const user = window.sessionStorage.getItem('access-user')
     if (to.path === '/Login') {
         return next();
     }

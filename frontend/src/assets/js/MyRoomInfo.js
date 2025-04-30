@@ -29,8 +29,13 @@ export default {
     },
     methods: {
         init() {
-            this.form = JSON.parse(sessionStorage.getItem("user"));
-            this.name = this.form.username;
+            let user = JSON.parse(sessionStorage.getItem("access-user"));
+            if (user) {
+                this.form.username = user.username;
+                this.form.name = user.name;
+            } else {
+                this.$router.push('/login');
+            }
         },
         getInfo() {
             request.get("/room/getMyRoom/" + this.name).then((res) => {

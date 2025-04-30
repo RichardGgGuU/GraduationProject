@@ -97,8 +97,13 @@ export default {
             this.dialogVisible = true;
             this.$nextTick(() => {
                 this.$refs.form.resetFields();
-                this.form.username = JSON.parse(sessionStorage.getItem("user")).username;
-                this.form.name = JSON.parse(sessionStorage.getItem("user")).name;
+                let user = JSON.parse(sessionStorage.getItem("access-user"));
+                if (user) {
+                    this.form.username = user.username;
+                    this.form.name = user.name;
+                } else {
+                    this.$router.push('/login');
+                }
                 request.get("/room/getMyRoom/" + this.form.username).then((res) => {
                     this.form.currentRoomId = res.data.dormRoomId
                     this.form.currentBedId = this.calBedNum(this.form.username, res.data)

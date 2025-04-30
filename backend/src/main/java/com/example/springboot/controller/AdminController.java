@@ -49,4 +49,17 @@ public class AdminController {
             return Result.error("-1", "更新失败");
         }
     }
+
+    /**
+     * 获取管理员个人信息
+     */
+    @GetMapping("/self")
+    public Result<?> getSelfInfo(HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("User");
+        if (admin != null) {
+            return Result.success(admin);
+        } else {
+            return Result.error("-1", "未登录或会话已过期");
+        }
+    }
 }

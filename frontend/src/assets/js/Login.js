@@ -38,7 +38,7 @@ export default {
                                 type: "success",
                             });
                             // 登陆成功跳转主页
-                            window.sessionStorage.setItem("user", JSON.stringify(res.data));
+                            window.sessionStorage.setItem("access-user", JSON.stringify(res.data));
                             window.sessionStorage.setItem("identity", JSON.stringify(this.form.identity));
                             this.$router.replace({path: "/home"});
                         } else {

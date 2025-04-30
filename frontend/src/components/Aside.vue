@@ -131,7 +131,7 @@ export default {
           sessionStorage.clear()
           this.$router.replace({path: "/login"});
         }
-        window.sessionStorage.setItem("user", JSON.stringify(result.data));
+        window.sessionStorage.setItem("access-user", JSON.stringify(result.data));
         this.user = result.data
       });
     },
