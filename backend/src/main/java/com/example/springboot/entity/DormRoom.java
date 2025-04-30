@@ -20,7 +20,7 @@ public class DormRoom {
     @TableId(value = "dormroom_id")
     private Integer dormRoomId;
     @TableField("dormbuild_id")
-    private int dormBuildId;
+    private String dormBuildId;
     @TableField("floor_num")
     private int floorNum;
     @TableField("max_capacity")

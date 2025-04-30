@@ -77,7 +77,7 @@ public class DormBuildController {
     @GetMapping("/getBuildingName")
     public Result<?> getBuildingName() {
         List<DormBuild> buildingName = dormBuildService.getBuildingId();
-        List<Integer> buildingId = buildingName.stream().map(dormBuildId -> dormBuildId.getDormBuildId()).collect(Collectors.toList());
+        List<String> buildingId = buildingName.stream().map(dormBuildId -> dormBuildId.getDormBuildId()).collect(Collectors.toList());
 
         if (!buildingId.isEmpty()) {
             return Result.success(buildingId);

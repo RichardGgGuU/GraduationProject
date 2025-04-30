@@ -24,7 +24,7 @@ public class DormManager {
     @TableField("password")
     private String password;
     @TableField("dormbuild_id")
-    private int dormBuildId;
+    private String dormBuildId;
     @TableField("name")
     private String name;
     @TableField("gender")

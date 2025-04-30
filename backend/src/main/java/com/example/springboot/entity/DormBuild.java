@@ -23,7 +23,7 @@ public class DormBuild {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField("dormbuild_id")
-    private int dormBuildId;
+    private String dormBuildId;
     @TableField("dormbuild_name")
     private String dormBuildName;
     @TableField("dormbuild_detail")
