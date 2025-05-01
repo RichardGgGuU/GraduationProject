@@ -25,12 +25,11 @@ public class AdjustRoomController {
      */
     @PostMapping("/add")
     public Result<?> add(@RequestBody AdjustRoom adjustRoom) {
-
         int result = adjustRoomService.addApply(adjustRoom);
-        if (result == 1) {
+        if (result > 0) {
             return Result.success();
         } else {
-            return Result.error("-1", "查询失败");
+            return Result.error("-1", "添加失败");
         }
     }
 
@@ -50,6 +49,7 @@ public class AdjustRoomController {
         }
         //更新调宿表信息
         int i = adjustRoomService.updateApply(adjustRoom);
+        adjustRoomService.updateRoom(adjustRoom);
         if (i == 1) {
             return Result.success();
         } else {
