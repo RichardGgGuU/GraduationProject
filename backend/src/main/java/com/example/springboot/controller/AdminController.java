@@ -58,7 +58,8 @@ public class AdminController {
         Admin admin = (Admin) session.getAttribute("User");
         if (admin != null) {
             return Result.success(admin);
-        } else {
+        }
+        else {
             return Result.error("-1", "未登录或会话已过期");
         }
     }

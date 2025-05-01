@@ -72,6 +72,21 @@ public class DormManagerController {
     }
 
     /**
+     * 获取宿管个人信息
+     */
+    @GetMapping("/self")
+    public Result<?> getSelfInfo(HttpSession session) {
+        DormManager dormManager = (DormManager) session.getAttribute("User");
+        if (dormManager != null) {
+            return Result.success(dormManager);
+        }
+
+        else {
+            return Result.error("-1", "未登录或会话已过期");
+        }
+    }
+
+    /**
      * 宿管登录
      */
     @PostMapping("/login")

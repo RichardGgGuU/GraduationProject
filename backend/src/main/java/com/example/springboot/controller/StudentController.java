@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
+import com.example.springboot.entity.Admin;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.StudentService;
@@ -69,6 +70,21 @@ public class StudentController {
             return Result.success(page);
         } else {
             return Result.error("-1", "查询失败");
+        }
+    }
+
+    /**
+     * 获取学生个人信息
+     */
+    @GetMapping("/self")
+    public Result<?> getSelfInfo(HttpSession session) {
+        Student student = (Student) session.getAttribute("User");
+        if (student != null) {
+            return Result.success(student);
+        }
+
+        else {
+            return Result.error("-1", "未登录或会话已过期");
         }
     }
 

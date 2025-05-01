@@ -42,29 +42,57 @@ export default {
     },
     methods: {
         init() {
-            this.form = JSON.parse(sessionStorage.getItem("user"));
-            this.name = this.form.name;
-            this.username = this.form.username;
+            let user = JSON.parse(sessionStorage.getItem("access-user"));
+            console.log('从sessionStorage获取的用户信息:', user);
+            if (user) {
+                this.form = user;
+                this.name = user.name;
+                this.username = user.username;
+                console.log('设置的用户名:', this.username);
+                console.log('设置的用户姓名:', this.name);
+            } else {
+                ElMessage({
+                    message: '请先登录',
+                    type: "error",
+                });
+                this.$router.push('/login');
+            }
         },
         async load() {
-            request.get("/repair/find/" + this.name, {
-                params: {
-                    pageNum: this.currentPage,
-                    pageSize: this.pageSize,
-                    search: this.search,
-                },
-            }).then((res) => {
-                console.log(res);
-                this.tableData = res.data.records;
-                this.total = res.data.total;
+            console.log('开始加载报修信息，用户姓名:', this.name);
+            try {
+                const res = await request.get("http://localhost:9090/repair/find/" + this.name, {
+                    params: {
+                        pageNum: this.currentPage,
+                        pageSize: this.pageSize,
+                        search: this.search,
+                    },
+                });
+                console.log('后端返回的报修信息:', res);
+                if (res.code === "0") {
+                    this.tableData = res.data.records || [];
+                    this.total = res.data.total || 0;
+                } else {
+                    ElMessage({
+                        message: res.msg || '获取报修信息失败',
+                        type: "error",
+                    });
+                }
+            } catch (error) {
+                console.error('加载报修信息出错:', error);
+                ElMessage({
+                    message: '加载报修信息失败，请检查网络连接',
+                    type: "error",
+                });
+            } finally {
                 this.loading = false;
-            });
+            }
         },
         getInfo() {
-            request.get("/room/getMyRoom/" + this.username).then((res) => {
+            request.get("http://localhost:9090/room/getMyRoom/" + this.username).then((res) => {
                 if (res.code === "0") {
                     this.room = res.data;
-                    console.log(this.room);
+                    console.log('获取到的房间信息:', this.room);
                 } else {
                     ElMessage({
                         message: res.msg,
@@ -98,8 +126,9 @@ export default {
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     //新增
-                    console.log(this.form)
-                    await request.post("/repair/add", this.form).then((res) => {
+                    console.log('提交的表单数据:', this.form)
+                    try {
+                        const res = await request.post("http://localhost:9090/repair/add", this.form);
                         if (res.code === "0") {
                             ElMessage({
                                 message: "新增成功",
@@ -110,11 +139,17 @@ export default {
                             this.dialogVisible = false;
                         } else {
                             ElMessage({
-                                message: res.msg,
+                                message: res.msg || '新增失败',
                                 type: "error",
                             });
                         }
-                    });
+                    } catch (error) {
+                        console.error('提交报修信息出错:', error);
+                        ElMessage({
+                            message: '提交失败，请检查网络连接',
+                            type: "error",
+                        });
+                    }
                 }
             })
         },

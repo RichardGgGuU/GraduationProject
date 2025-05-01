@@ -1,6 +1,8 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.common.Result;
+import com.example.springboot.entity.Admin;
+import com.example.springboot.entity.DormManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

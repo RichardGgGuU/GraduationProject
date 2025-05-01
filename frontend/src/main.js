@@ -13,6 +13,15 @@ const app = createApp(App)
     .use(ElementPlus, {
         locale: zhCn
     })
+
+// 配置错误处理
+app.config.errorHandler = (err, vm, info) => {
+  if (err.message && err.message.includes('ResizeObserver')) {
+    return
+  }
+  console.error(err)
+}
+
 for (let iconName in ELIcons) {
     app.component(iconName, ELIcons[iconName])
 }

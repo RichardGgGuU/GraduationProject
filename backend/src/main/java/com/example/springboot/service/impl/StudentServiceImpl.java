@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-/**
- * @author AthenaKnovesp
- */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
 
