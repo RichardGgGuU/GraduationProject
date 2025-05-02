@@ -78,11 +78,12 @@ export default {
     },
     methods: {
         async load() {
+            const userInfo = JSON.parse(sessionStorage.getItem('access-user'))
             request.get("/adjustRoom/find", {
                 params: {
                     pageNum: this.currentPage,
                     pageSize: this.pageSize,
-                    search: this.search,
+                    search: userInfo.username,
                 },
             }).then((res) => {
                 this.tableData = res.data.records;

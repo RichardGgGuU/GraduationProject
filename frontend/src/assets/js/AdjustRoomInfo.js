@@ -37,7 +37,7 @@ export default {
             loading: true,
             dialogVisible: false,
             detailDialog: false,
-            search: this.name,
+            search: '',
             currentPage: 1,
             pageSize: 10,
             total: 0,
@@ -90,7 +90,8 @@ export default {
             });
         },
         reset() {
-            //this.search = ''
+            this.search = ''
+            console.log('this.username', this.username);
             request.get("/adjustRoom/find", {
                 params: {
                     pageNum: 1,
