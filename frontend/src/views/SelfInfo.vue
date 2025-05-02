@@ -427,7 +427,7 @@ export default {
         form.value.checkPass = ''  // 清空确认密码
         disabled.value = false
         showpassword.value = false
-        display.value = 'display: block'
+        display.value = ''
       } else {
         form.value.password = '********'  // 恢复为星号
         form.value.checkPass = ''  // 清空确认密码

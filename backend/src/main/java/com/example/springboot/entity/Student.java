@@ -29,6 +29,8 @@ public class Student {
     private String name;
     @TableField("age")
     private int age;
+    @TableField("dormroomid")
+    private int dormroomid;
     @TableField("gender")
     private String gender;
     @TableField("phone_num")

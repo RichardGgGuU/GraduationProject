@@ -38,6 +38,8 @@
               prop="gender"
           />
           <el-table-column label="年龄" prop="age" sortable/>
+          <el-table-column label="房间号" prop="dormroomid" sortable/>
+<!--          <el-table-column label="床位" prop="bedId"/>-->
           <el-table-column label="手机号" prop="phoneNum"/>
           <el-table-column :show-overflow-tooltip="true" label="邮箱" prop="email"/>
           <!--      操作栏-->

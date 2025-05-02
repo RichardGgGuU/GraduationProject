@@ -3,10 +3,16 @@ package com.example.springboot.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.springboot.common.Result;
+import com.example.springboot.entity.DormRoom;
 import com.example.springboot.entity.Student;
+import com.example.springboot.mapper.DormRoomMapper;
 import com.example.springboot.mapper.StudentMapper;
+import com.example.springboot.service.DormRoomService;
 import com.example.springboot.service.StudentService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
 
@@ -18,6 +24,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Resource
     private StudentMapper studentMapper;
+
+    @Resource
+    private DormRoomMapper dormRoomMapper;
+
+    @Resource
+    private DormRoomService dormRoomService;
 
     /**
      * 学生登陆
@@ -53,8 +65,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         QueryWrapper<Student> qw = new QueryWrapper<>();
         qw.like("name", search);
         Page studentPage = studentMapper.selectPage(page, qw);
+        //QueryWrapper<DormRoom> dr = new QueryWrapper<>();
+        //DormRoom dormRoom = dormRoomMapper.selectById()
+        //DormRoom dormRoom = dormRoomService.judgeHadBed(search);
+
+        //studentPage.addOrder("dormRoomId",dormRoom.getDormRoomId());
         return studentPage;
     }
+
 
     /**
      * 更新学生信息

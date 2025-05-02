@@ -9,6 +9,8 @@ public interface AdjustRoomService extends IService<AdjustRoom> {
 
     int updateRoom(AdjustRoom adjustRoom);
 
+    int updateStu(AdjustRoom adjustRoom);
+
     //查询调宿申请
     Page find(Integer pageNum, Integer pageSize, String search);
 

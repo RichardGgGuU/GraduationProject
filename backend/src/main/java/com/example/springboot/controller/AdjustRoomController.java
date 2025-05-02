@@ -50,6 +50,7 @@ public class AdjustRoomController {
         //更新调宿表信息
         int i = adjustRoomService.updateApply(adjustRoom);
         adjustRoomService.updateRoom(adjustRoom);
+        adjustRoomService.updateStu(adjustRoom);
         if (i == 1) {
             return Result.success();
         } else {

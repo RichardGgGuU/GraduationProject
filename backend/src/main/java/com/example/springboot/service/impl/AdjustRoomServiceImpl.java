@@ -77,6 +77,14 @@ public class AdjustRoomServiceImpl extends ServiceImpl<AdjustRoomMapper, AdjustR
         return 0;
     }
 
+    @Override
+    public int updateStu(AdjustRoom adjustRoom){
+        Student student = studentMapper.selectById(adjustRoom.getUsername());
+        student.setDormroomid(adjustRoom.getTowardsRoomId());
+        studentMapper.updateById(student);
+        return 0;
+    }
+
     /**
      * 查找调宿申请
      */

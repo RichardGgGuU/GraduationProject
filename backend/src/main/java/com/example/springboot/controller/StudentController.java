@@ -3,6 +3,7 @@ package com.example.springboot.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Admin;
+import com.example.springboot.entity.DormRoom;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.StudentService;
@@ -72,6 +73,8 @@ public class StudentController {
             return Result.error("-1", "查询失败");
         }
     }
+
+
 
     /**
      * 获取学生个人信息
