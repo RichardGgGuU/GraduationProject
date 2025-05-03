@@ -55,7 +55,7 @@ public class DormManagerServiceImpl extends ServiceImpl<DormManagerMapper, DormM
     public Page find(Integer pageNum, Integer pageSize, String search) {
         Page page = new Page<>(pageNum, pageSize);
         QueryWrapper<DormManager> qw = new QueryWrapper<>();
-        qw.like("name", search);
+        qw.like("username", search);
         Page dormManagerPage = dormManagerMapper.selectPage(page, qw);
         return dormManagerPage;
     }

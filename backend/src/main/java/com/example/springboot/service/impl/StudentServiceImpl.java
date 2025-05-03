@@ -100,7 +100,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public Page find(Integer pageNum, Integer pageSize, String search) {
         Page page = new Page<>(pageNum, pageSize);
         QueryWrapper<Student> qw = new QueryWrapper<>();
-        qw.like("name", search);
+        qw.like("username", search);
         Page studentPage = studentMapper.selectPage(page, qw);
         //QueryWrapper<DormRoom> dr = new QueryWrapper<>();
         //DormRoom dormRoom = dormRoomMapper.selectById()

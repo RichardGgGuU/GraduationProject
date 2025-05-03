@@ -11,7 +11,7 @@
         <div style="margin: 10px 0">
           <!--    搜索区-->
           <div style="margin: 10px 0">
-            <el-input v-model="search" clearable placeholder="请输入姓名" prefix-icon="Search" style="width: 20%"/>
+            <el-input v-model="search" clearable placeholder="请输入账号ID" prefix-icon="Search" style="width: 20%"/>
             <el-button icon="Search" style="margin-left: 5px" type="primary" @click="load"></el-button>
             <el-button icon="refresh-left" style="margin-left: 10px" type="default" @click="reset"></el-button>
             <div style="float: right">

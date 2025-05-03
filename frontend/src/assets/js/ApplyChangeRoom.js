@@ -95,21 +95,61 @@ export default {
             return row.gender === value;
         },
         add() {
-            this.dialogVisible = true;
-            this.$nextTick(() => {
-                this.$refs.form.resetFields();
-                let user = JSON.parse(sessionStorage.getItem("access-user"));
-                if (user) {
-                    this.form.username = user.username;
-                    this.form.name = user.name;
-                } else {
-                    this.$router.push('/login');
+            // this.dialogVisible = true;
+            this.$nextTick(async () => {
+                try {
+                    // this.$refs.form.resetFields();
+                    // if (this.$refs.form?.resetFields) {
+                    //     this.$refs.form.resetFields();
+                    // }
+                    // 1. 处理 sessionStorage 读取错误
+                    let user;
+                    try {
+                        user = JSON.parse(sessionStorage.getItem("access-user"));
+                    } catch (e) {
+                        console.error("解析用户信息失败:", e);
+                        this.$message.error("用户信息异常，请重新登录");
+                        this.$router.push('/login');
+                        return; // 终止后续执行
+                    }
+
+                    if (!user) {
+                        this.$router.push('/login');
+                        return; // 终止后续执行
+                    }
+
+                    // 2. 处理用户字段赋值
+                    this.form.username = user.username || ""; // 防 undefined
+                    this.form.name = user.name || "";
+
+                    // 3. 处理 API 请求错误
+                    const res = await request.get(`/room/getMyRoom/${this.form.username}`)
+                        .catch(e => {
+                            console.error("获取房间失败:", e);
+                            this.$message.error("加载房间信息失败");
+                            // throw e; // 进入外层 catch
+                        });
+
+                    // 4. 处理响应数据异常
+                    if (!res?.data?.dormRoomId) {
+                        console.error("无效的响应数据:", res);
+                        this.$message.error("暂未分配宿舍无法调宿");
+                        return;
+                    }
+                    this.dialogVisible = true;
+
+                    this.$refs.form?.resetFields();
+
+                    this.form.currentRoomId = res.data.dormRoomId;
+                    this.form.currentBedId = this.calBedNum(this.form.username, res.data);
+
+                    this.judgeOption = true;
+                } catch (e) {
+                    // 全局兜底错误处理
+                    console.error("add 方法发生未预期错误:", e);
+                    this.$message.error("系统异常，请稍后重试");
+                    this.dialogVisible = false; // 关闭弹窗避免卡死
                 }
-                request.get("/room/getMyRoom/" + this.form.username).then((res) => {
-                    this.form.currentRoomId = res.data.dormRoomId
-                    this.form.currentBedId = this.calBedNum(this.form.username, res.data)
-                });
-                this.judgeOption = true;
             });
         },
         calBedNum(username, data) {

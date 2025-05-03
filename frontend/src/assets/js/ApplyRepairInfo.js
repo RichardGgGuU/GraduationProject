@@ -114,10 +114,17 @@ export default {
             this.detailDialog = false;
         },
         add() {
+            if (this.room.dormBuildId === '' && this.room.dormRoomId === '') {
+                // this.dialogVisible = false;
+                this.$message.error("暂未分配宿舍无法申请维修");
+                return;
+            }
             this.dialogVisible = true;
             this.$nextTick(() => {
                 this.$refs.form.resetFields();
                 this.form.repairer = this.name
+                // console.log('this.room.dormBuildId', typeof this.room.dormBuildId)
+                // console.log('this.room.dormRoomId', typeof this.room.dormRoomId)
                 this.form.dormBuildId = this.room.dormBuildId
                 this.form.dormRoomId = this.room.dormRoomId
             });
