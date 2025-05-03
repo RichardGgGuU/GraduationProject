@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
@@ -52,9 +53,45 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
      */
     @Override
     public int addNewStudent(Student student) {
-        int insert = studentMapper.insert(student);
+        int insert = studentMapper.insert(findlastRoom(student));
         return insert;
     }
+
+    //分配房间
+    public Student findlastRoom(Student student){
+        QueryWrapper<DormRoom> qw = new QueryWrapper<>();
+        qw.like("dormroom_id", "");
+        List<DormRoom> dormRoomList= dormRoomMapper.selectList(qw);
+        for(DormRoom dormRoom:dormRoomList){
+            if (dormRoom.getFirstBed()==null){
+                student.setDormroomid(dormRoom.getDormRoomId());
+                dormRoom.setThirdBed(student.getUsername());
+                dormRoomService.updateById(dormRoom);
+                break;
+            }
+            if (dormRoom.getSecondBed()==null){
+                student.setDormroomid(dormRoom.getDormRoomId());
+                dormRoom.setSecondBed(student.getUsername());
+                dormRoomService.updateById(dormRoom);
+                break;
+            }
+            if (dormRoom.getThirdBed()==null){
+                student.setDormroomid(dormRoom.getDormRoomId());
+                dormRoom.setThirdBed(student.getUsername());
+                dormRoomService.updateById(dormRoom);
+                break;
+            }
+            if (dormRoom.getFourthBed()==null){
+                student.setDormroomid(dormRoom.getDormRoomId());
+                dormRoom.setFourthBed(student.getUsername());
+                dormRoomService.updateById(dormRoom);
+                break;
+            }
+        }
+        return student;
+    }
+
+
 
     /**
      * 分页查询学生

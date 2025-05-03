@@ -7,23 +7,30 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.common.JudgeBedName;
 import com.example.springboot.entity.AdjustRoom;
 import com.example.springboot.entity.DormRoom;
+import com.example.springboot.entity.Student;
 import com.example.springboot.mapper.DormRoomMapper;
+import com.example.springboot.mapper.StudentMapper;
 import com.example.springboot.service.DormRoomService;
+import com.example.springboot.service.StudentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+import java.util.Objects;
+
 import static com.example.springboot.common.CalPeopleNum.calNum;
 
 
-/**
- * @author AthenaKnovesp
- */
+
 @Service
 public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implements DormRoomService {
 
     @Resource
     private DormRoomMapper dormRoomMapper;
+
+    @Resource
+    private StudentMapper studentMapper;
+
 
     /**
      * 首页顶部：空宿舍统计
@@ -62,6 +69,26 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
      */
     @Override
     public int updateNewRoom(DormRoom dormRoom) {
+        if(dormRoom.getFirstBed()!=null){
+            Student student = studentMapper.selectById(dormRoom.getFirstBed());
+            student.setDormroomid(dormRoom.getDormRoomId());
+            studentMapper.updateById(student);
+        }
+        if(dormRoom.getSecondBed()!=null){
+            Student student = studentMapper.selectById(dormRoom.getSecondBed());
+            student.setDormroomid(dormRoom.getDormRoomId());
+            studentMapper.updateById(student);
+        }
+        if(dormRoom.getThirdBed()!=null){
+            Student student = studentMapper.selectById(dormRoom.getThirdBed());
+            student.setDormroomid(dormRoom.getDormRoomId());
+            studentMapper.updateById(student);
+        }
+        if(dormRoom.getFourthBed()!=null){
+            Student student = studentMapper.selectById(dormRoom.getFourthBed());
+            student.setDormroomid(dormRoom.getDormRoomId());
+            studentMapper.updateById(student);
+        }
         int i = dormRoomMapper.updateById(dormRoom);
         return i;
     }
@@ -80,14 +107,39 @@ public class DormRoomImpl extends ServiceImpl<DormRoomMapper, DormRoom> implemen
      */
     @Override
     public int deleteBedInfo(String bedName, Integer dormRoomId, int calCurrentNum) {
-        UpdateWrapper updateWrapper = new UpdateWrapper();
-        updateWrapper.eq("dormroom_id", dormRoomId);
-        updateWrapper.set(bedName, null);
-        updateWrapper.set("current_capacity", calCurrentNum - 1);
-        int update = dormRoomMapper.update(null, updateWrapper);
-        return update;
+        DormRoom dormroom = dormRoomMapper.selectById(dormRoomId);
+        String studentId = null;
+        switch (bedName) {
+            case "first_bed":
+                studentId = dormroom.getFirstBed();
+                break;
+            case "second_bed":
+                studentId = dormroom.getSecondBed();
+                break;
+            case "third_bed":
+                studentId = dormroom.getThirdBed();
+                break;
+            case "fourth_bed":
+                studentId = dormroom.getFourthBed();
+                break;
+        }
+
+        if (studentId != null) {
+            Student student = studentMapper.selectById(studentId);
+            if (student != null) {
+                student.setDormroomid(0);  // 假设 1 是默认宿舍ID
+                studentMapper.updateById(student);
+            }
+        }
+        UpdateWrapper<DormRoom> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("dormroom_id", dormRoomId)
+                .set(bedName, null)
+                .set("current_capacity", calCurrentNum - 1);
+        return dormRoomMapper.update(null, updateWrapper);
 
     }
+
+
 
     /**
      * 床位信息，查询该学生是否已由床位

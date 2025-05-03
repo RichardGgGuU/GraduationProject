@@ -24,6 +24,7 @@ public class StudentController {
      */
     @PostMapping("/add")
     public Result<?> add(@RequestBody Student student) {
+
         int i = studentService.addNewStudent(student);
         if (i == 1) {
             return Result.success();
@@ -134,7 +135,7 @@ public class StudentController {
         if (student != null) {
             return Result.success(student);
         } else {
-            return Result.error("-1", "不存在该学生");
+            return Result.error("-1", "未分配宿舍");
         }
     }
 }

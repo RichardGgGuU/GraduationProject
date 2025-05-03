@@ -50,15 +50,15 @@ export default {
             rules: {
                 dormRoomId: [
                     {required: true, message: "请输入房间号", trigger: "blur"},
-                    {pattern: /^[0-9]{4}$/, message: "范围：1000-9999", trigger: "blur"},
+                    {pattern: /^[0-9]{4,5}$/, message: "范围：1000-99999", trigger: "blur"},
                 ],
                 floorNum: [
                     {required: true, message: "请输入楼层数", trigger: "blur"},
-                    {pattern: /^[1-3]$/, message: "范围：1-3", trigger: "blur"},
+                    {pattern: /^[1-7]$/, message: "范围：1-7", trigger: "blur"},
                 ],
                 dormBuildId: [
                     {required: true, message: "请输入楼宇号数", trigger: "blur"},
-                    {pattern: /^[1-4]$/, message: "范围：1-4", trigger: "blur"},
+                    {pattern: /^(100|[1-9][0-9]?)$/, message: "范围：1-100", trigger: "blur"},
                 ],
                 maxCapacity: [
                     {required: true, message: "请输入房间可住人数", trigger: "blur"},

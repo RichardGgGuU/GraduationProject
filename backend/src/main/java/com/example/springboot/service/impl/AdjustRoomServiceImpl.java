@@ -40,6 +40,7 @@ public class AdjustRoomServiceImpl extends ServiceImpl<AdjustRoomMapper, AdjustR
         return insert;
     }
 
+
     @Override
     public int updateRoom(AdjustRoom adjustRoom){
         DormRoom currentRoom = dormRoomMapper.selectById(adjustRoom.getCurrentRoomId());
