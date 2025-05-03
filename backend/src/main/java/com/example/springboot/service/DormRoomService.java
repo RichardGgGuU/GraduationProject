@@ -5,9 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboot.entity.AdjustRoom;
 import com.example.springboot.entity.DormRoom;
 
-/**
- * @author AthenaKnovesp
- */
 public interface DormRoomService extends IService<DormRoom> {
     //统计没有住满的宿舍数量
     public int notFullRoom();

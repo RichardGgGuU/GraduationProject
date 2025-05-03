@@ -8,11 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @author AthenaKnovesp
- * <p>
- * 宿舍楼
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

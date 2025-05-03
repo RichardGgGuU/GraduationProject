@@ -3,10 +3,6 @@ package com.example.springboot.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboot.entity.Admin;
 
-
-/**
- * @author AthenaKnovesp
- */
 public interface AdminService extends IService<Admin> {
 
 

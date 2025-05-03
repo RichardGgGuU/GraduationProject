@@ -6,9 +6,6 @@ import com.example.springboot.entity.Notice;
 
 import java.util.List;
 
-/**
- * @author AthenaKnovesp
- */
 public interface NoticeService extends IService<Notice> {
 
 

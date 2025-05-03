@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-/**
- * @author AthenaKnovesp
- */
-
 @Service
 public class RepairServiceImpl extends ServiceImpl<RepairMapper, Repair> implements RepairService {
 

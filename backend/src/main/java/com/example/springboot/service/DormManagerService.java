@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboot.entity.DormManager;
 
-/**
- * @author AthenaKnovesp
- */
 public interface DormManagerService extends IService<DormManager> {
 
     //学生登陆

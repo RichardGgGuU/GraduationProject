@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.springboot.entity.Repair;
 
-/**
- * @author AthenaKnovesp
- */
 public interface RepairService extends IService<Repair> {
 
     //显示订单数量

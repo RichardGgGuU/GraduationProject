@@ -7,12 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @author AthenaKnovesp
- * <p>
- * 学生
- */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

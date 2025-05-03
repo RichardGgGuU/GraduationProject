@@ -6,9 +6,6 @@ import com.example.springboot.entity.DormBuild;
 
 import java.util.List;
 
-/**
- * @author AthenaKnovesp
- */
 public interface DormBuildService extends IService<DormBuild> {
 
     //新增楼宇
