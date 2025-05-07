@@ -7,11 +7,15 @@ import com.example.springboot.entity.DormRoom;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+@Tag(name = "学生管理")
 @RestController
 @RequestMapping("/stu")
 public class StudentController {
@@ -22,25 +26,25 @@ public class StudentController {
     /**
      * 添加学生信息
      */
+    @Operation(summary = "添加学生")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody Student student) {
-
-        int i = studentService.addNewStudent(student);
-        if (i == 1) {
+    public Result<?> add(@Parameter(description = "学生信息") @RequestBody Student student) {
+        int result = studentService.addNewStudent(student);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "添加失败");
         }
-
     }
 
     /**
      * 更新学生信息
      */
+    @Operation(summary = "更新学生信息")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Student student) {
-        int i = studentService.updateNewStudent(student);
-        if (i == 1) {
+    public Result<?> update(@Parameter(description = "学生信息") @RequestBody Student student) {
+        int result = studentService.updateNewStudent(student);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "更新失败");
@@ -50,10 +54,11 @@ public class StudentController {
     /**
      * 删除学生信息
      */
+    @Operation(summary = "删除学生")
     @DeleteMapping("/delete/{username}")
-    public Result<?> delete(@PathVariable String username) {
-        int i = studentService.deleteStudent(username);
-        if (i == 1) {
+    public Result<?> delete(@Parameter(description = "学生ID") @PathVariable String username) {
+        int result = studentService.deleteStudent(username);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "删除失败");
@@ -63,10 +68,11 @@ public class StudentController {
     /**
      * 查找学生信息
      */
+    @Operation(summary = "分页查询学生")
     @GetMapping("/find")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+    public Result<?> findPage(@Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                              @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") Integer pageSize,
+                              @Parameter(description = "搜索关键字") @RequestParam(defaultValue = "") String search) {
         Page page = studentService.find(pageNum, pageSize, search);
         if (page != null) {
             return Result.success(page);
@@ -75,19 +81,16 @@ public class StudentController {
         }
     }
 
-
-
     /**
      * 获取学生个人信息
      */
+    @Operation(summary = "获取学生个人信息")
     @GetMapping("/self")
     public Result<?> getSelfInfo(HttpSession session) {
         Student student = (Student) session.getAttribute("User");
         if (student != null) {
             return Result.success(student);
-        }
-
-        else {
+        } else {
             return Result.error("-1", "未登录或会话已过期");
         }
     }
@@ -95,17 +98,12 @@ public class StudentController {
     /**
      * 学生登录
      */
+    @Operation(summary = "学生登录")
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user, HttpSession session) {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
-        Object o = studentService.stuLogin(user.getUsername(), user.getPassword());
-        if (o != null) {
-            System.out.println(o);
-            //存入session
-            session.setAttribute("Identity", "stu");
-            session.setAttribute("User", o);
-            return Result.success(o);
+    public Result<?> login(@Parameter(description = "登录信息") @RequestBody Student student) {
+        Student res = studentService.stuLogin(student.getUsername(), student.getPassword());
+        if (res != null) {
+            return Result.success(res);
         } else {
             return Result.error("-1", "用户名或密码错误");
         }
@@ -114,6 +112,7 @@ public class StudentController {
     /**
      * 主页顶部：学生统计
      */
+    @Operation(summary = "获取学生统计")
     @GetMapping("/stuNum")
     public Result<?> stuNum() {
         int num = studentService.stuNum();
@@ -124,13 +123,13 @@ public class StudentController {
         }
     }
 
-
     /**
      * 床位信息，查询是否存在该学生
      * 床位信息，查询床位上的学生信息
      */
+    @Operation(summary = "查询学生信息")
     @GetMapping("/exist/{value}")
-    public Result<?> exist(@PathVariable String value) {
+    public Result<?> exist(@Parameter(description = "学生信息") @PathVariable String value) {
         Student student = studentService.stuInfo(value);
         if (student != null) {
             return Result.success(student);

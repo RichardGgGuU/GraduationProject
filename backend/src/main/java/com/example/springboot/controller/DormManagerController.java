@@ -5,11 +5,15 @@ import com.example.springboot.common.Result;
 import com.example.springboot.entity.DormManager;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.DormManagerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+@Tag(name = "宿管管理")
 @RestController
 @RequestMapping("/dormManager")
 public class DormManagerController {
@@ -20,10 +24,11 @@ public class DormManagerController {
     /**
      * 宿管添加
      */
+    @Operation(summary = "添加宿管")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody DormManager dormManager) {
-        int i = dormManagerService.addNewDormManager(dormManager);
-        if (i == 1) {
+    public Result<?> add(@Parameter(description = "宿管信息") @RequestBody DormManager dormManager) {
+        int result = dormManagerService.addNewDormManager(dormManager);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "添加失败");
@@ -33,10 +38,11 @@ public class DormManagerController {
     /**
      * 宿管信息更新
      */
+    @Operation(summary = "更新宿管信息")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody DormManager dormManager) {
-        int i = dormManagerService.updateNewDormManager(dormManager);
-        if (i == 1) {
+    public Result<?> update(@Parameter(description = "宿管信息") @RequestBody DormManager dormManager) {
+        int result = dormManagerService.updateNewDormManager(dormManager);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "更新失败");
@@ -46,10 +52,11 @@ public class DormManagerController {
     /**
      * 宿管删除
      */
+    @Operation(summary = "删除宿管")
     @DeleteMapping("/delete/{username}")
-    public Result<?> delete(@PathVariable String username) {
-        int i = dormManagerService.deleteDormManager(username);
-        if (i == 1) {
+    public Result<?> delete(@Parameter(description = "宿管ID") @PathVariable String username) {
+        int result = dormManagerService.deleteDormManager(username);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "删除失败");
@@ -59,10 +66,11 @@ public class DormManagerController {
     /**
      * 宿管查找
      */
+    @Operation(summary = "分页查询宿管")
     @GetMapping("/find")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+    public Result<?> findPage(@Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                              @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") Integer pageSize,
+                              @Parameter(description = "搜索关键字") @RequestParam(defaultValue = "") String search) {
         Page page = dormManagerService.find(pageNum, pageSize, search);
         if (page != null) {
             return Result.success(page);
@@ -74,14 +82,13 @@ public class DormManagerController {
     /**
      * 获取宿管个人信息
      */
+    @Operation(summary = "获取宿管个人信息")
     @GetMapping("/self")
     public Result<?> getSelfInfo(HttpSession session) {
         DormManager dormManager = (DormManager) session.getAttribute("User");
         if (dormManager != null) {
             return Result.success(dormManager);
-        }
-
-        else {
+        } else {
             return Result.error("-1", "未登录或会话已过期");
         }
     }
@@ -89,16 +96,12 @@ public class DormManagerController {
     /**
      * 宿管登录
      */
+    @Operation(summary = "宿管登录")
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user, HttpSession session) {
-
-        Object o = dormManagerService.dormManagerLogin(user.getUsername(), user.getPassword());
-        if (o != null) {
-            System.out.println(o);
-            //存入session
-            session.setAttribute("Identity", "dormManager");
-            session.setAttribute("User", o);
-            return Result.success(o);
+    public Result<?> login(@Parameter(description = "登录信息") @RequestBody DormManager dormManager) {
+        DormManager res = dormManagerService.dormManagerLogin(dormManager.getUsername(), dormManager.getPassword());
+        if (res != null) {
+            return Result.success(res);
         } else {
             return Result.error("-1", "用户名或密码错误");
         }

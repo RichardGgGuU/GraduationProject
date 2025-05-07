@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
 import com.example.springboot.entity.Repair;
 import com.example.springboot.service.RepairService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+@Tag(name = "报修管理")
 @RestController
 @RequestMapping("/repair")
 public class RepairController {
@@ -15,52 +19,44 @@ public class RepairController {
     @Resource
     private RepairService repairService;
 
-    /**
-     * 添加订单
-     */
+    @Operation(summary = "添加报修")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody Repair repair) {
-        int i = repairService.addNewOrder(repair);
-        if (i == 1) {
+    public Result<?> add(@Parameter(description = "报修信息") @RequestBody Repair repair) {
+        int result = repairService.addNewOrder(repair);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "添加失败");
         }
     }
 
-    /**
-     * 更新订单
-     */
+    @Operation(summary = "更新报修")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Repair repair) {
-        int i = repairService.updateNewOrder(repair);
-        if (i == 1) {
+    public Result<?> update(@Parameter(description = "报修信息") @RequestBody Repair repair) {
+        int result = repairService.updateNewOrder(repair);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "更新失败");
         }
     }
 
-    /**
-     * 删除订单
-     */
+    @Operation(summary = "删除报修")
     @DeleteMapping("/delete/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
-        int i = repairService.deleteOrder(id);
-        if (i == 1) {
+    public Result<?> delete(@Parameter(description = "报修ID") @PathVariable Integer id) {
+        int result = repairService.deleteOrder(id);
+        if (result == 1) {
             return Result.success();
         } else {
             return Result.error("-1", "删除失败");
         }
     }
 
-    /**
-     * 查找订单
-     */
+    @Operation(summary = "分页查询报修")
     @GetMapping("/find")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+    public Result<?> findPage(@Parameter(description = "页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                             @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") Integer pageSize,
+                             @Parameter(description = "搜索关键字") @RequestParam(defaultValue = "") String search) {
         Page page = repairService.find(pageNum, pageSize, search);
         if (page != null) {
             return Result.success(page);

@@ -5,11 +5,15 @@ import com.example.springboot.common.UID;
 import com.example.springboot.entity.Admin;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+@Tag(name = "管理员管理")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -22,8 +26,9 @@ public class AdminController {
     /**
      * 管理员登录
      */
+    @Operation(summary = "管理员登录")
     @PostMapping("/login")
-    public Result<?> login(@RequestBody User user, HttpSession session) {
+    public Result<?> login(@Parameter(description = "登录信息") @RequestBody User user, HttpSession session) {
 
         Object o = adminService.adminLogin(user.getUsername(), user.getPassword());
         if (o != null) {
@@ -40,8 +45,9 @@ public class AdminController {
     /**
      * 管理员信息更新
      */
+    @Operation(summary = "更新管理员信息")
     @PutMapping("/update")
-    public Result<?> update(@RequestBody Admin admin) {
+    public Result<?> update(@Parameter(description = "管理员信息") @RequestBody Admin admin) {
         int i = adminService.updateAdmin(admin);
         if (i == 1) {
             return Result.success();
@@ -53,6 +59,7 @@ public class AdminController {
     /**
      * 获取管理员个人信息
      */
+    @Operation(summary = "获取管理员个人信息")
     @GetMapping("/self")
     public Result<?> getSelfInfo(HttpSession session) {
         Admin admin = (Admin) session.getAttribute("User");

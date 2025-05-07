@@ -5,10 +5,14 @@ import com.example.springboot.common.Result;
 import com.example.springboot.entity.AdjustRoom;
 import com.example.springboot.service.AdjustRoomService;
 import com.example.springboot.service.DormRoomService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+@Api(tags = "调宿申请管理")
 @RestController
 @RequestMapping("/adjustRoom")
 public class AdjustRoomController {
@@ -19,12 +23,9 @@ public class AdjustRoomController {
     @Resource
     private DormRoomService dormRoomService;
 
-
-    /**
-     * 添加订单
-     */
+    @ApiOperation("添加调宿申请")
     @PostMapping("/add")
-    public Result<?> add(@RequestBody AdjustRoom adjustRoom) {
+    public Result<?> add(@ApiParam("调宿申请信息") @RequestBody AdjustRoom adjustRoom) {
         int result = adjustRoomService.addApply(adjustRoom);
         if (result > 0) {
             return Result.success();
@@ -33,13 +34,10 @@ public class AdjustRoomController {
         }
     }
 
-
-    /**
-     * 更新订单
-     */
+    @ApiOperation("更新调宿申请")
     @PutMapping("/update/{state}")
-    public Result<?> update(@RequestBody AdjustRoom adjustRoom, @PathVariable Boolean state) {
-
+    public Result<?> update(@ApiParam("调宿申请信息") @RequestBody AdjustRoom adjustRoom, 
+                          @ApiParam("是否通过") @PathVariable Boolean state) {
         if (state) {
             // 更新房间表信息
             int i = dormRoomService.adjustRoomUpdate(adjustRoom);
@@ -58,11 +56,9 @@ public class AdjustRoomController {
         }
     }
 
-    /**
-     * 删除订单
-     */
+    @ApiOperation("删除调宿申请")
     @DeleteMapping("/delete/{id}")
-    public Result<?> delete(@PathVariable Integer id) {
+    public Result<?> delete(@ApiParam("申请ID") @PathVariable Integer id) {
         int i = adjustRoomService.deleteAdjustment(id);
         if (i == 1) {
             return Result.success();
@@ -71,13 +67,11 @@ public class AdjustRoomController {
         }
     }
 
-    /**
-     * 查找订单
-     */
+    @ApiOperation("分页查询调宿申请")
     @GetMapping("/find")
-    public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                              @RequestParam(defaultValue = "10") Integer pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+    public Result<?> findPage(@ApiParam("页码") @RequestParam(defaultValue = "1") Integer pageNum,
+                             @ApiParam("每页数量") @RequestParam(defaultValue = "10") Integer pageSize,
+                             @ApiParam("搜索关键字") @RequestParam(defaultValue = "") String search) {
         Page page = adjustRoomService.find(pageNum, pageSize, search);
         if (page != null) {
             return Result.success(page);

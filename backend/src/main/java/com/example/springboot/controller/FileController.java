@@ -9,6 +9,9 @@ import com.example.springboot.entity.Student;
 import com.example.springboot.service.AdminService;
 import com.example.springboot.service.DormManagerService;
 import com.example.springboot.service.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
@@ -17,7 +20,9 @@ import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.UUID;
 
+@Tag(name = "文件管理")
 @RestController
 @RequestMapping("/files")
 public class FileController {
@@ -34,35 +39,26 @@ public class FileController {
     @Resource
     private DormManagerService dormManagerService;
 
-    /**
-     * 将上传的头像写入本地 rootFilePath
-     */
+    @Operation(summary = "文件上传")
     @PostMapping("/upload")
-    public Result<?> upload(MultipartFile file) throws IOException {
-        //获取文件名
+    public Result<?> upload(@Parameter(description = "文件") @RequestParam MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         System.out.println(originalFilename);
-        //获取文件尾缀
         String fileType = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
 
-        //重命名
         String uid = new UID().produceUID();
         String newFilename = uid + fileType;
         System.out.println(newFilename);
-        //存储位置
         String targetPath = rootFilePath + newFilename;
         System.out.println(targetPath);
-        //获取字节流
         FileUtil.writeBytes(file.getBytes(), targetPath);
 
         return Result.success(newFilename);
     }
 
-    /**
-     * 将头像名称更新到数据库中
-     */
+    @Operation(summary = "更新学生头像")
     @PostMapping("/uploadAvatar/stu")
-    public Result<?> uploadStuAvatar(@RequestBody Student student) {
+    public Result<?> uploadStuAvatar(@Parameter(description = "学生信息") @RequestBody Student student) {
         if (student.getAvatar() != null) {
             int i = studentService.updateNewStudent(student);
             if (i == 1) {
@@ -74,8 +70,9 @@ public class FileController {
         return Result.error("-1", "设置头像失败");
     }
 
+    @Operation(summary = "更新管理员头像")
     @PostMapping("/uploadAvatar/admin")
-    public Result<?> uploadAdminAvatar(@RequestBody Admin admin) {
+    public Result<?> uploadAdminAvatar(@Parameter(description = "管理员信息") @RequestBody Admin admin) {
         if (admin.getAvatar() != null) {
             int i = adminService.updateAdmin(admin);
             if (i == 1) {
@@ -87,8 +84,9 @@ public class FileController {
         return Result.error("-1", "设置头像失败");
     }
 
+    @Operation(summary = "更新宿管头像")
     @PostMapping("/uploadAvatar/dormManager")
-    public Result<?> uploadDormManagerAvatar(@RequestBody DormManager dormManager) {
+    public Result<?> uploadDormManagerAvatar(@Parameter(description = "宿管信息") @RequestBody DormManager dormManager) {
         if (dormManager.getAvatar() != null) {
             int i = dormManagerService.updateNewDormManager(dormManager);
             if (i == 1) {
@@ -100,11 +98,9 @@ public class FileController {
         return Result.error("-1", "设置头像失败");
     }
 
-    /**
-     * 前端调用接口，后端查询存储与本地的头像，进行Base64编码 发送到前端
-     */
+    @Operation(summary = "获取头像")
     @GetMapping("/initAvatar/{filename}")
-    public Result<?> initAvatar(@PathVariable String filename) throws IOException {
+    public Result<?> initAvatar(@Parameter(description = "文件名") @PathVariable String filename) throws IOException {
         System.out.println(filename);
         String path = rootFilePath + filename;
         System.out.println(path);
@@ -112,8 +108,6 @@ public class FileController {
     }
 
     private Result<?> getImage(String path) throws IOException {
-
-        //读取图片变成字节数组
         FileInputStream fileInputStream = new FileInputStream(path);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -124,7 +118,6 @@ public class FileController {
         }
         byte[] fileByte = bos.toByteArray();
 
-        //进行base64编码
         BASE64Encoder encoder = new BASE64Encoder();
         String data = encoder.encode(fileByte);
 
@@ -132,5 +125,4 @@ public class FileController {
         bos.close();
         return Result.success(data);
     }
-
 }
