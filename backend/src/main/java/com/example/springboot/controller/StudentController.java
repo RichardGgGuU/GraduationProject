@@ -100,10 +100,16 @@ public class StudentController {
      */
     @Operation(summary = "学生登录")
     @PostMapping("/login")
-    public Result<?> login(@Parameter(description = "登录信息") @RequestBody Student student) {
-        Student res = studentService.stuLogin(student.getUsername(), student.getPassword());
-        if (res != null) {
-            return Result.success(res);
+    public Result<?> login(@RequestBody User user, HttpSession session) {
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        Object o = studentService.stuLogin(user.getUsername(), user.getPassword());
+        if (o != null) {
+            System.out.println(o);
+            //存入session
+            session.setAttribute("Identity", "stu");
+            session.setAttribute("User", o);
+            return Result.success(o);
         } else {
             return Result.error("-1", "用户名或密码错误");
         }

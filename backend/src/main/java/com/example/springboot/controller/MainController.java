@@ -5,12 +5,16 @@ import com.example.springboot.entity.Admin;
 import com.example.springboot.entity.DormManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.flogger.Flogger;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
 @Tag(name = "主页管理")
 @RestController
+@Slf4j
 @RequestMapping("/main")
 public class MainController {
 
@@ -21,7 +25,7 @@ public class MainController {
     @GetMapping("/loadIdentity")
     public Result<?> loadIdentity(HttpSession session) {
         Object identity = session.getAttribute("Identity");
-
+        //log.info(identity.toString());
         if (identity != null) {
             return Result.success(identity);
         } else {
@@ -36,7 +40,7 @@ public class MainController {
     @GetMapping("/loadUserInfo")
     public Result<?> loadUserInfo(HttpSession session) {
         Object User = session.getAttribute("User");
-
+        //log.info(User.toString());
         if (User != null) {
             return Result.success(User);
         } else {

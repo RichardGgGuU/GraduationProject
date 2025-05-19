@@ -1,0 +1,74 @@
+<configuration status="warn" monitorInterval="5">
+    <!-- 属性，如果有需要重复使用的值，可以先设置，再通过${name}来使用 -->
+    <Properties>
+        <Property name="XLogDir">G:/logs/familyTV</Property>
+    </Properties>
+
+    <!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+    <appenders>
+        <!-- 这个设置控制台输出哪些级别的日志 -->
+        <console name="Console" target="SYSTEM_OUT">
+            <Filters>
+                <!--控制台只输出level及其以上级别的信息（onMatch匹配），其他的直接拒绝（onMismatch）-->
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <!--输出日志的格式-->
+            <PatternLayout pattern="[%d{DEFAULT}] [%p] - %l- %m%n" />
+        </console>
+
+        <!-- 这个配置会将ERROR、WARN、INFO的日志写到文件，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileInfoWarn" fileName="${XLogDir}/infoWarn.log" filePattern="${XLogDir}/$${date:yyyy-MM}/infoWarn-%d{yyyyMMdd}-%i.log">
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="[%d{DEFAULT}] [%p] - %l- %m%n" />
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="200MB" />
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖-->
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+        <!-- 这个配置会将ERROR以上的日志写到文件，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileError" fileName="${XLogDir}/error.log" filePattern="${XLogDir}/$${date:yyyy-MM}/error-%d{yyyyMMdd}-%i.log">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="[%d{DEFAULT}] [%p] - %l- %m%n" />
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="200MB" />
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖-->
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </appenders>
+
+    <!--然后定义loggers，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+        <!--监控系统信息-->
+        <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。-->
+        <logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息，所以level=info -->
+        <!--若是additivity设为false，则子Logger只会在自己的appender里输出，为true时则会追加父Logger的appender。-->
+        <logger name="org.mybatis" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <!-- name值可作为创建Logger时的参数，对应的Logger对象将使用level指定的等级 -->
+        <!-- 注意，若appender中的level级高，则以appender的level为准 -->
+        <logger name="AihumanWeb" level="DEBUG" additivity="false"/><!-- false则无appender不输出，true则追加root的appender -->
+        <logger name="org.hibernate" level="ERROR" />
+        <!-- rootLogger(根记录器)的配置，可被子logger继承追加，未匹配子logger时记录器将使用该level -->
+        <root level="ERROR">
+            <appender-ref ref="Console" />
+            <appender-ref ref="RollingFileInfoWarn" />
+            <appender-ref ref="RollingFileError" />
+        </root>
+    </loggers>
+</configuration>
