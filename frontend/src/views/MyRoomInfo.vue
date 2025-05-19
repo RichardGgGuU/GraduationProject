@@ -138,7 +138,7 @@
           </div>
         </div>
         <div style="margin-left: 100px;margin-top: 85px">
-          <img alt="" src="../../public/myRoom.png" style="width: 600px">
+          <img alt="" src="../../public/Room.png" style="width: 600px">
         </div>
       </div>
     </el-card>

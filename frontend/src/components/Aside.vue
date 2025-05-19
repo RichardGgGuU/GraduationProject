@@ -6,7 +6,7 @@
       unique-opened
   >
     <div style="display: flex;align-items: center;justify-content: center;padding: 11px 0;">
-      <img alt="" src="@/assets/logo.png" style="width: 60px;">
+      <img alt="" src="../../public/log.png" style="width: 60px;">
     </div>
     <el-menu-item index="/home">
       <el-icon>

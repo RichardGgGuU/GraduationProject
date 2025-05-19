@@ -1,0 +1,33 @@
+package com.example.springboot.common;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+    private CorsConfiguration buildConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        //corsConfiguration.addAllowedOrigin("http://47.98.100.131:8080");// 允许前端域名
+        //corsConfiguration.addAllowedOrigin("http://47.98.100.131:80");
+        //corsConfiguration.addAllowedOrigin("http://47.98.100.131:9090");
+        //corsConfiguration.addAllowedOrigin("http://localhost:9090");
+        //corsConfiguration.addAllowedOrigin("http://localhost:8080");
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*"); // 允许任何头
+        corsConfiguration.addAllowedMethod("*"); // 允许任何方法（post、get等）
+        corsConfiguration.setAllowCredentials(true); // 允许携带凭证
+        return corsConfiguration;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", buildConfig()); // 对所有路径生效
+        return new CorsFilter(source);
+    }
+}
