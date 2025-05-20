@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 // 告诉Mybatis-plus，这个类与数据库中的哪张表有关
 @TableName(value = "student")
-public class Student {
+public class Student implements Serializable{
     // 告诉Mybatis-plus, 属性对应表中的字段
 
     @TableId(value = "username")

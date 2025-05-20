@@ -2,10 +2,9 @@ package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
-import com.example.springboot.entity.Admin;
-import com.example.springboot.entity.DormRoom;
 import com.example.springboot.entity.Student;
 import com.example.springboot.entity.User;
+import com.example.springboot.service.RedisLockService;
 import com.example.springboot.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Tag(name = "学生管理")
 @RestController
@@ -23,18 +23,33 @@ public class StudentController {
     @Resource
     private StudentService studentService;
 
+    @Resource
+    private RedisLockService redisLockService;
+
     /**
      * 添加学生信息
      */
     @Operation(summary = "添加学生")
     @PostMapping("/add")
     public Result<?> add(@Parameter(description = "学生信息") @RequestBody Student student) {
-        int result = studentService.addNewStudent(student);
-        if (result == 1) {
-            return Result.success();
-        } else {
-            return Result.error("-1", "添加失败");
-        }
+        String lockKey = "StuAddLock";
+        String requestId = UUID.randomUUID().toString();
+        boolean locked = redisLockService.tryLock(lockKey, requestId, 10); // 10秒过期
+
+        if (locked) {
+            try {
+                // 执行业务逻辑
+                int result = studentService.addNewStudent(student);
+                if (result == 1) {
+                    return Result.success();
+                }else {
+                    return Result.error("-1", "添加失败");
+                }
+            } finally {
+                // 释放锁
+                redisLockService.releaseLock(lockKey, requestId);
+            }
+        }return  Result.error("-1", "添加失败");
     }
 
     /**
@@ -43,12 +58,24 @@ public class StudentController {
     @Operation(summary = "更新学生信息")
     @PutMapping("/update")
     public Result<?> update(@Parameter(description = "学生信息") @RequestBody Student student) {
-        int result = studentService.updateNewStudent(student);
-        if (result == 1) {
-            return Result.success();
-        } else {
-            return Result.error("-1", "更新失败");
-        }
+
+        String lockKey = "StuUpdateLock";
+        String requestId = UUID.randomUUID().toString();
+        boolean locked = redisLockService.tryLock(lockKey, requestId, 10); // 10秒过期
+        if (locked) {
+            try {
+                // 执行业务逻辑
+                int result = studentService.updateNewStudent(student);
+                if (result == 1) {
+                    return Result.success();
+                } else {
+                    return Result.error("-1", "更新失败");
+                }
+            } finally {
+                // 释放锁
+                redisLockService.releaseLock(lockKey, requestId);
+            }
+        }return  Result.error("-1", "更新失败");
     }
 
     /**
@@ -57,12 +84,27 @@ public class StudentController {
     @Operation(summary = "删除学生")
     @DeleteMapping("/delete/{username}")
     public Result<?> delete(@Parameter(description = "学生ID") @PathVariable String username) {
-        int result = studentService.deleteStudent(username);
-        if (result == 1) {
-            return Result.success();
-        } else {
-            return Result.error("-1", "删除失败");
+
+        String lockKey = "StuDeleteLock";
+        String requestId = UUID.randomUUID().toString();
+        boolean locked = redisLockService.tryLock(lockKey, requestId, 10); // 10秒过期
+
+        if (locked) {
+            try {
+                // 执行业务逻辑
+                int result = studentService.deleteStudent(username);
+                if (result == 1) {
+                    return Result.success();
+                } else {
+                    return Result.error("-1", "删除失败");
+                }
+            } finally {
+                // 释放锁
+                redisLockService.releaseLock(lockKey, requestId);
+            }
         }
+        return  Result.error("-1", "删除失败");
+
     }
 
     /**

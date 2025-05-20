@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 @TableName(value = "repair")
-public class Repair {
+public class Repair implements Serializable{
 
     @TableId(value = "id")
     private Integer id;

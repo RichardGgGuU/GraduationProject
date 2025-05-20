@@ -7,13 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 @TableName(value = "notice")
-public class Notice {
+public class Notice implements Serializable{
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

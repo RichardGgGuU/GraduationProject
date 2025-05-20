@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 @TableName(value = "dorm_manager")
-public class DormManager {
+public class DormManager implements Serializable{
 
     @TableId("username")
     private String username;

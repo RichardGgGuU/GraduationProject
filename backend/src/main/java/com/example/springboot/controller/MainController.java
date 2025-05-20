@@ -24,6 +24,7 @@ public class MainController {
     @Operation(summary = "获取身份信息")
     @GetMapping("/loadIdentity")
     public Result<?> loadIdentity(HttpSession session) {
+
         Object identity = session.getAttribute("Identity");
         //log.info(identity.toString());
         if (identity != null) {

@@ -8,12 +8,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
 @TableName(value = "dorm_build")
-public class DormBuild {
+public class DormBuild implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
